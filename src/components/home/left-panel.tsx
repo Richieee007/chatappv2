@@ -1,29 +1,40 @@
-"use client";
+'use client';
 
-import { ListFilter, LogOut, MessageSquareDiff, Search, User } from "lucide-react";
+import { ListFilter, Search,} from "lucide-react";
 import { Input } from "../ui/input";
 import ThemeSwitch from "./theme-switch";
 import { conversations } from "@/dummy-data/db";
 import Conversation from "./conversation";
-import conversation from "./conversation";
-import { SignOutButton, SignedIn, UserButton } from "@clerk/nextjs";
+import { UserButton } from "@clerk/nextjs";
+import UserListDialog from "./user-list-dialog";
+import { Authenticated } from "convex/react";
+import { useAuth } from "@clerk/clerk-react";
 
 const LeftPanel = () => {
+
+const { getToken } = useAuth();
+console.log(getToken({ template: "convex" }));
 	
 
 	return (
 		<div className='w-1/4 border-gray-600 border-r'>
 			<div className='sticky top-0 bg-left-panel z-10'>
 				{/* Header */}
+				
+				
 				<div className='flex justify-between bg-gray-primary p-3 items-center'>
 				<UserButton />
-			
+				
 					<div className='flex items-center gap-3'>
-						<MessageSquareDiff size={20} /> {/* TODO: This line will be replaced with <UserListDialog /> */}
+						
+					<UserListDialog />
+					
 						<ThemeSwitch />
 					
 					</div>
+					
 				</div>
+				
 				<div className='p-3 flex items-center'>
 					{/* Search */}
 					<div className='relative h-10 mx-3 flex-1'>

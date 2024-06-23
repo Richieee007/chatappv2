@@ -70,21 +70,28 @@ export const setUserOffline = internalMutation({
 });
 
 export const getUsers = query({
+	
 	args: {},
 	handler: async (ctx, args) => {
+		console.log("server identity - getusers", await ctx.auth.getUserIdentity());
 		const identity = await ctx.auth.getUserIdentity();
+		
 		if (!identity) {
 			throw new ConvexError("Unauthorized");
 		}
 
 		const users = await ctx.db.query("users").collect();
-		return users.filter((user) => user.tokenIdentifier !== identity.tokenIdentifier);
+		return users;
+		// .filter((user) => user.tokenIdentifier !== identity.tokenIdentifier);
 	},
 });
 
 export const getMe = query({
-	args: {},
+	args: {
+
+	},
 	handler: async (ctx, args) => {
+		console.log("server identity - getme", await ctx.auth.getUserIdentity());
 		const identity = await ctx.auth.getUserIdentity();
 		if (!identity) {
 			throw new ConvexError("Unauthorized");
@@ -103,9 +110,11 @@ export const getMe = query({
 	},
 });
 
+
 export const getGroupMembers = query({
 	args: { conversationId: v.id("conversations") },
 	handler: async (ctx, args) => {
+		console.log("server identity - getGroupMembs", await ctx.auth.getUserIdentity());
 		const identity = await ctx.auth.getUserIdentity();
 
 		if (!identity) {
