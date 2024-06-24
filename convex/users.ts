@@ -1,6 +1,8 @@
 import { ConvexError, v } from "convex/values";
 import { internalMutation, query } from "./_generated/server";
 
+
+
 export const createUser = internalMutation({
 	args: {
 		tokenIdentifier: v.string(),
@@ -9,6 +11,7 @@ export const createUser = internalMutation({
 		image: v.string(),
 	},
 	handler: async (ctx, args) => {
+		console.log("Creating user with tokenIdentifier:", args.tokenIdentifier);
 		await ctx.db.insert("users", {
 			tokenIdentifier: args.tokenIdentifier,
 			email: args.email,
@@ -45,6 +48,8 @@ export const setUserOnline = internalMutation({
 			.withIndex("by_tokenIdentifier", (q) => q.eq("tokenIdentifier", args.tokenIdentifier))
 			.unique();
 
+			console.log("This is the user that has been fetched on setuseroffline:", user)
+
 		if (!user) {
 			throw new ConvexError("User not found");
 		}
@@ -69,12 +74,14 @@ export const setUserOffline = internalMutation({
 	},
 });
 
+
+
 export const getUsers = query({
-	
-	args: {},
+		args: {},
 	handler: async (ctx, args) => {
-		console.log("server identity - getusers", await ctx.auth.getUserIdentity());
+
 		const identity = await ctx.auth.getUserIdentity();
+		
 		
 		if (!identity) {
 			throw new ConvexError("Unauthorized");
@@ -87,22 +94,25 @@ export const getUsers = query({
 });
 
 export const getMe = query({
-	args: {
-
-	},
-	handler: async (ctx, args) => {
-		console.log("server identity - getme", await ctx.auth.getUserIdentity());
+	args: {},
+	handler: async (ctx) => {
+	
 		const identity = await ctx.auth.getUserIdentity();
+		console.log("server identity", await ctx.auth.getUserIdentity());
+
 		if (!identity) {
 			throw new ConvexError("Unauthorized");
 		}
 
 		const user = await ctx.db
 			.query("users")
-			.withIndex("by_tokenIdentifier", (q) => q.eq("tokenIdentifier", identity.tokenIdentifier))
+			.withIndex("by_tokenIdentifier", (q) => q.eq("tokenIdentifier", identity.tokenIdentifier),)
 			.unique();
 
+			console.log("This is the user that has been fetched:", user)
+
 		if (!user) {
+			console.log("User not found for tokenIdentifier:", identity.tokenIdentifier);
 			throw new ConvexError("User not found");
 		}
 
@@ -114,7 +124,7 @@ export const getMe = query({
 export const getGroupMembers = query({
 	args: { conversationId: v.id("conversations") },
 	handler: async (ctx, args) => {
-		console.log("server identity - getGroupMembs", await ctx.auth.getUserIdentity());
+		
 		const identity = await ctx.auth.getUserIdentity();
 
 		if (!identity) {

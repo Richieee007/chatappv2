@@ -7,15 +7,10 @@ import { conversations } from "@/dummy-data/db";
 import Conversation from "./conversation";
 import { UserButton } from "@clerk/nextjs";
 import UserListDialog from "./user-list-dialog";
-import { Authenticated } from "convex/react";
 import { useAuth } from "@clerk/clerk-react";
 
 const LeftPanel = () => {
-
-const { getToken } = useAuth();
-console.log(getToken({ template: "convex" }));
 	
-
 	return (
 		<div className='w-1/4 border-gray-600 border-r'>
 			<div className='sticky top-0 bg-left-panel z-10'>

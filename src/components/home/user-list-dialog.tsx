@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
 	Dialog,
+	DialogClose,
 	DialogContent,
 	DialogDescription,
 	DialogHeader,
@@ -16,6 +17,10 @@ import { Id } from "../../../convex/_generated/dataModel";
 import { useMutation, useQuery } from "convex/react";
 // import { users } from '../../dummy-data/db'
 import { api } from "../../../convex/_generated/api";
+import toast from "react-hot-toast";
+
+
+
 
 
 
@@ -27,11 +32,15 @@ const UserListDialog = () => {
 	const [selectedImage, setSelectedImage] = useState<File | null>(null);
 	const [renderedImage, setRenderedImage] = useState("");
 
+
 	const imgRef = useRef<HTMLInputElement>(null);
+	const dialogCloseRef = useRef<HTMLButtonElement>(null);
 
     const createConversation = useMutation(api.conversations.createConversation);
+	const generateUploadUrl = useMutation(api.conversations.generateUploadUrl)
+	const users = useQuery(api.users.getUsers);
     const me = useQuery(api.users.getMe);
-    const users = useQuery(api.users.getUsers);
+
 
     
 
@@ -41,7 +50,6 @@ const UserListDialog = () => {
         try {
             const isGroup = selectedUsers.length > 1;
 
-
             let conversationId;
             if(!isGroup){
                 conversationId = await createConversation({
@@ -49,14 +57,37 @@ const UserListDialog = () => {
                     isGroup: false,
                 });
             } else {
+				const postUrl = await generateUploadUrl();
 
+				const result = await fetch(postUrl, {
+					method: "POST",
+					headers: {"Content-Type":selectedImage?.type!},
+					body: selectedImage,
+				})
 
+				const { storageId } = await result.json();
+
+				console.log("This is the Result:", result)
+
+				await createConversation({
+					participants: [...selectedUsers, me?._id!],
+					isGroup: true,
+					admin: me?._id!,
+					groupName,
+					groupImage: storageId,
+				})
             }
+			dialogCloseRef.current?.click();
+				setSelectedUsers([]);
+				setGroupName("");
+				setSelectedImage(null);
+
+				//todo Coversation ID coming sooononono <selectedConversation/>
         } catch (err){
+			toast.error("Failed to do the ting")
             console.error(err);
         }finally {
             setIsLoading(false);
-
         }
     };
 
@@ -77,6 +108,7 @@ const UserListDialog = () => {
 			<DialogContent>
 				<DialogHeader>
 					{/* TODO: <DialogClose /> will be here */}
+					<DialogClose ref={dialogCloseRef} />
 					<DialogTitle>USERS</DialogTitle>
 				</DialogHeader>
 
@@ -144,7 +176,7 @@ const UserListDialog = () => {
 				<div className='flex justify-between'>
 					<Button variant={"outline"}>Cancel</Button>
 					<Button
-                    // onClick={handleCreateConversation}
+                    onClick={handleCreateConversation}
 						disabled={selectedUsers.length === 0 || (selectedUsers.length > 1 && !groupName) || isLoading}
 					>
 						{/* spinner */}
