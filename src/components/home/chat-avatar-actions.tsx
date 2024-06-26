@@ -69,7 +69,7 @@ const ChatAvatarActions = ({ me, message }: ChatAvatarActionsProps) => {
 
 			{!isMember && !fromAI && isGroup && <Ban size={16} className='text-red-500' />}
 			{isGroup && isMember && selectedConversation?.admin === me._id && (
-				<LogOut size={16} className='text-red-500 opacity-0 group-hover:opacity-100' onClick={handleKickUser} />
+				<LogOut size={16} className='text-red-500 opacity-0 group-hover:opacity-100' />
 			)}
 		</div>
 	);

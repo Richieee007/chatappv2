@@ -18,6 +18,7 @@ import { useMutation, useQuery } from "convex/react";
 // import { users } from '../../dummy-data/db'
 import { api } from "../../../convex/_generated/api";
 import toast from "react-hot-toast";
+import { useConversationStore } from "@/store/chat-store";
 
 
 
@@ -42,6 +43,7 @@ const UserListDialog = () => {
     const me = useQuery(api.users.getMe);
 
 
+	const { setSelectedConversation } = useConversationStore();
     
 
     const handleCreateConversation = async () => {
@@ -69,7 +71,8 @@ const UserListDialog = () => {
 
 				// console.log("This is the Result:", result)
 
-				await createConversation({
+
+				conversationId = await createConversation({
 					participants: [...selectedUsers, me?._id!],
 					isGroup: true,
 					admin: me?._id!,
@@ -83,6 +86,17 @@ const UserListDialog = () => {
 				setSelectedImage(null);
 
 				//todo Coversation ID coming sooononono <selectedConversation/>
+const conversationName = isGroup ? groupName : users?.find((user) => user._id === selectedUsers[0])?.name;
+
+			setSelectedConversation({
+				_id: conversationId,
+				participants: selectedUsers,
+				isGroup,
+				image: isGroup ? renderedImage : users?.find((user) => user._id === selectedUsers[0])?.image,
+				name: conversationName,
+				admin: me?._id!,
+			});
+
         } catch (err){
 			toast.error("Failed to do the ting")
             console.error(err);

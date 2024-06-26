@@ -68,6 +68,7 @@ const config = {
       "blue-primary": "hsl(var(--blue-primary))",
       "blue-secondary": "hsl(var(--blue-secondary))",
       "blue-chat": "hsl(var(--blue-chat))",
+      "lightblue-chat": "hsl(var(--lightblue-chat))",
     },
     backgroundImage: {
       "chat-tile-light": "url('/bg-light.png')",
