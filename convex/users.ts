@@ -11,7 +11,7 @@ export const createUser = internalMutation({
 		image: v.string(),
 	},
 	handler: async (ctx, args) => {
-		console.log("Creating user with tokenIdentifier:", args.tokenIdentifier);
+		// console.log("Creating user with tokenIdentifier:", args.tokenIdentifier);
 		await ctx.db.insert("users", {
 			tokenIdentifier: args.tokenIdentifier,
 			email: args.email,
@@ -48,7 +48,7 @@ export const setUserOnline = internalMutation({
 			.withIndex("by_tokenIdentifier", (q) => q.eq("tokenIdentifier", args.tokenIdentifier))
 			.unique();
 
-			console.log("This is the user that has been fetched on setuseroffline:", user)
+			// console.log("This is the user that has been fetched on setuseroffline:", user)
 
 		if (!user) {
 			throw new ConvexError("User not found");
@@ -97,7 +97,7 @@ export const getMe = query({
 	handler: async (ctx) => {
 	
 		const identity = await ctx.auth.getUserIdentity();
-		console.log("server identity", await ctx.auth.getUserIdentity());
+		// console.log("server identity", await ctx.auth.getUserIdentity());
 
 		if (!identity) {
 			throw new ConvexError("Unauthorized");
@@ -111,7 +111,7 @@ export const getMe = query({
 			console.log("This is the user that has been fetched:", user)
 
 		if (!user) {
-			console.log("User not found for tokenIdentifier:", identity.tokenIdentifier);
+			// console.log("User not found for tokenIdentifier:", identity.tokenIdentifier);
 			throw new ConvexError("User not found");
 		}
 

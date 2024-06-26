@@ -10,7 +10,7 @@ export const createConversation = mutation({
 		admin: v.optional(v.id("users")),
 	},
 	handler: async (ctx, args) => {
-		console.log("server identity - createConvo", await ctx.auth.getUserIdentity());
+		// console.log("server identity - createConvo", await ctx.auth.getUserIdentity());
 		
 		const identity = await ctx.auth.getUserIdentity();
 		if (!identity) throw new ConvexError("Unauthorized");

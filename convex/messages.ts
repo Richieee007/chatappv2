@@ -84,8 +84,7 @@ export const getMessages = query({
 	},
 	handler: async (ctx, args) => {
 		const identity = await ctx.auth.getUserIdentity();
-		if (!identity) {
-			throw new Error("Unauthorized");
+		if (!identity) { throw new Error("Unauthorized");
 		}
 
 		const messages = await ctx.db
@@ -101,7 +100,7 @@ export const getMessages = query({
 					const image = message.messageType === "text" ? "/gpt.png" : "dall-e.png";
 					return { ...message, sender: { name: "ChatGPT", image } };
 				}
-				let sender;
+				let sender; 
 				// Check if sender profile is in cache
 				if (userProfileCache.has(message.sender)) {
 					sender = userProfileCache.get(message.sender);
