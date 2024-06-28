@@ -24,7 +24,8 @@ const MessageInput = () => {
 			await sendTextMsg({
 				content: msgText, 
 				conversation: selectedConversation!._id, 
-				sender: me!._id})
+				sender: me!._id});
+				setMsgText("");
 			
 		} catch (err:any) {
 			toast.error(err.message);
