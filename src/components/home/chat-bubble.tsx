@@ -27,8 +27,8 @@ const ChatBubble = ({ me, message, previousMessage }: ChatBubbleProps) => {
 	const isMember = selectedConversation?.participants.includes(message.sender?._id) || false;
 	const isGroup = selectedConversation?.isGroup;
 	const fromMe = message.sender?._id === me._id;
-	const fromAI = message.sender?.name === "ChatGPT";
-	const bgClass = fromMe ? "bg-lightblue-chat text-white text-bold" : !fromAI ? "bg-white dark:bg-gray-primary" : "bg-white-500 text-black";
+	const fromAI = message.sender?.name === "ChatMYG";
+	const bgClass = fromMe ? "bg-lightblue-chat text-black " : !fromAI ? "bg-white dark:bg-gray-primary" : "bg-redgpt text-white";
 
 	const [open, setOpen] = useState(false);
 	
