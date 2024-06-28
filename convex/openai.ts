@@ -43,7 +43,7 @@ export const dall_e = action({
 	},
 	handler: async (ctx, args) => {
 		const res = await openai.images.generate({
-			model: "dall-e-3",
+			model: "dall-e-2",
 			prompt: args.messageBody,
 			n: 1,
 			size: "1024x1024",
