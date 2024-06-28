@@ -6,16 +6,21 @@ import MessageContainer from "./message-container";
 import ChatPlaceHolder from "@/components/home/chat-placeholder";
 import GroupMembersDialog from "./group-members-dialog";
 import { useConversationStore } from "@/store/chat-store";
-import { useQuery } from "convex/react";
+import { useConvexAuth, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 
 const RightPanel = () => {
 	const {selectedConversation, setSelectedConversation} = useConversationStore();
+	const { isLoading } = useConvexAuth(); 
 	if (!selectedConversation) return <ChatPlaceHolder />;
 
 	const conversationName = (selectedConversation.isGroup === true ? selectedConversation.groupName : selectedConversation.name );
 	const isGroup = (selectedConversation.isGroup === true ? true : false);
 	const avatarIcon = (selectedConversation.isGroup === true ? selectedConversation.groupImage : selectedConversation.image)
+
+	
+
+	if(isLoading) return null;
 
 
 
